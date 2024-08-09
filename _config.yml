@@ -21,7 +21,7 @@
 title: Yu's Garden Of Thoughts
 email: zcy0627@outlook.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Yu's Garden Of Thoughts is a gallery for itemizing some ideas, 
+  Yu's Garden Of Thoughts is a gallery for some ideas, 
   difficulties or maybe source-code-study "encountered" by Yu as a graphics developer. 
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
