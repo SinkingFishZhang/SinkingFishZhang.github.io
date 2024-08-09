@@ -4,15 +4,7 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
-
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
-
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
-
-
-[jekyll-organization]: https://github.com/jekyll
+  Yu's Garden Of Thoughts is a gallery for itemizing some ideas, 
+  difficulties or maybe source-code-study "encountered" by Yu as a graphics developer. 
+  Articles here are TECHNICAL ONLY and never anything else.
+  If you have questions or ideas to share please don’t hesitate to drop me an email.
