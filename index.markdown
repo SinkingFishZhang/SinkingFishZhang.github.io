@@ -1,6 +1,6 @@
 ---
-# Feel free to add content and custom Front Matter to this file.
-# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
-
-layout: home
+My title: This is rio197's blog
 ---
+
+Articles here are TECHNICAL ONLY and never anything else.
+  If you have questions or ideas to share please don’t hesitate to drop me an email.
