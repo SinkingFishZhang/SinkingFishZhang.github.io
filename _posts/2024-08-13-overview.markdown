@@ -1,0 +1,5 @@
+---
+layout: post
+title:  "Overview: graphical architecture of a drawing software"
+permalink: /overview
+---
