@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "At The Very Beginning"
-permalink: /at-the-beginning/
+permalink: /at-the-beginning
 author: Garden Manager
 ---
 

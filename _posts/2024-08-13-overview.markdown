@@ -3,3 +3,10 @@ layout: post
 title:  "Overview: graphical architecture of a drawing software"
 permalink: /overview
 ---
+
+Before reading all the posts, I highly recommend that you read this post first, so that you could have a preliminary understanding of the structure of our software and the structure of graphics and say goodbye with getting confused.
+
+Our drawing software is a pure front-end project with a common and old vue2/JavaScript ES6 framework. Like many other front-end projects, the project was created by Vue CLI with a common file structure, such as node_modules, public, src, package.json, package-lock.json, vue.config.js, .env. In the src folder, assets, component, router, store, view are listed. And, of course, App.vue and main.js served respectively as the primary vue component and the instantiation portal of vue, are necessary. 
+
+I believe that everyone here is already familiar with the front-end framework, and of course, the traditional front-end is not the main theme of this blog. As a drawing software, I will mainly talk about the main ideas and graphics architecture in graphic drawing below.
+
