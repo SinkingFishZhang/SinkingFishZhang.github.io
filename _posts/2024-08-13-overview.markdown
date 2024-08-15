@@ -6,7 +6,33 @@ permalink: /overview
 
 Before reading all the posts, I highly recommend that you read this post first, so that you could have a preliminary understanding of the structure of our software and the structure of graphics and say goodbye with getting confused.
 
-Our drawing software is a pure front-end project with a common and old vue2/JavaScript ES6 framework. Like many other front-end projects, the project was created by Vue CLI with a common file structure, such as node_modules, public, src, package.json, package-lock.json, vue.config.js, .env. In the src folder, assets, component, router, store, view are listed. And, of course, App.vue and main.js served respectively as the primary vue component and the instantiation portal of vue, are necessary. 
+Our drawing software is a pure front-end project with a common and old vue2/JavaScript ES6 framework created by Vue CLI with a common file structure. I guess that everyone here is already familiar with the front-end framework, and of course, the traditional front-end is not our theme. As a drawing software, I would like to mainly talk about some ideas and graphics architecture in graphic drawing below.
 
-I believe that everyone here is already familiar with the front-end framework, and of course, the traditional front-end is not the main theme of this blog. As a drawing software, I will mainly talk about the main ideas and graphics architecture in graphic drawing below.
+The top-most object of the entire project, baseApp, is placed inside a &lt;canvas\> element. In the baseApp, sheet represents the top of the drawing system among with many other member variables, referred to as \_sheet. Inspired by PhotoShop, layers are children of sheet, referred to as \_layer. Each layer contains the shapes that we can see directly, for example textshape, lineshape, polygonshape, symbolshape, and some other custom-made shapes. These shapes are the children of the layer they are shown. Each shape is a separate class, and the methods in the class depict their respective characteristics. I think it'll be clearer with code blocks and results.
 
+TODO: code blocks and results
+TODO: explain
+
+Next, I'd like to briefly describe the structure of an object class for shapes. Drawing a rectangle with lines is the example.
+
+The first is the constructor, which defines some member variables and initialization methods. It's a common feature of object-oriented programming.
+
+TODO: constructor
+
+You might say: isn't every shape a static image? That would be a big mistake. For a drawing software, each shape is dynamic, which means we can manipulate the shape at any time by changing some properties, such as changing the solid line to the dotted line, the pentagram to the triangle, and so on. This means that a looping method is executed infinite times in the shape class that respond to changed properties in real time, and this method is called render() and it's the core method. We do mathematical calculations on the position, angle, etc. of the shape in the render() method. The following code block shows how to use lineshapes to draw a rectangle with length l and width w in the render method
+
+TODO: draw a rectangle with length l and width w in the render method
+
+If you get tired of configuring each property when the graphical object is instantiated, we can clone it from the stylesheet (for more ideas about the stylesheet please read the post "stylesheet"). Therefore, clone() method should be included in each shape, but not necessary. clone() method is usually an instantiation of this class and will only be called outside of the class. A clone() method example of rectangle is shown below
+
+TODO: clone() method example of rectangle
+
+The getProperties and setProperties methods are a must in a shape class. This method allows us to save the sheet locally and read the local file, which is the process of serialization and deserialization. In both of these methods, you need to add all the properties contained in the constructor to ensure that the properties of the shape are saved and read correctly.
+
+Bound is an important property of a shape. Normally, the bound of a shape is the extreme value of the horizontal and vertical directions of the shape's rendering range. It 's a rectangle. Bounding box is also the range of dotted boxes that appear when users select a shape with the mouse. Although the wrong bounding box does not affect the display of the shape itself, it will make it difficult for the user to select the shape, and bizzare position shifts and deformations may occur in subsequent matrix calculations. Defined by setBound() method, it is necessary. It needs to be called in the render method to ensure that the bound is changed in real time when the property changes. The example shows as follows
+
+TODO: setBound()
+
+To sum up, the code for this example is:
+
+Todo: all code
