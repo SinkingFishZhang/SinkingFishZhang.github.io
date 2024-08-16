@@ -64,7 +64,7 @@ render(context){
 }
 ```
 
-If you get tired of configuring each property when the graphical object is instantiated, we can clone it from the stylesheet (for more ideas about the stylesheet please read the post "stylesheet"). Therefore, <code class="language-plaintext highlighter-rouge">clone()</code> method should be included in each shape, but <em>not necessary</em>. <code class="language-plaintext highlighter-rouge">clone()</code> method is usually an instantiation of this class and will only be called <em>outside</em> of the class. A <code class="language-plaintext highlighter-rouge">clone()</code> method example of rectangle is shown below
+If you get tired of configuring each property when the graphical object is instantiated, we can clone it from the stylesheet (for more ideas about the stylesheet please read the post <a href="./stylesheet">Stylesheet</a>). Therefore, <code class="language-plaintext highlighter-rouge">clone()</code> method should be included in each shape, but <em>not necessary</em>. <code class="language-plaintext highlighter-rouge">clone()</code> method is usually an instantiation of this class and will only be called <em>outside</em> of the class. A <code class="language-plaintext highlighter-rouge">clone()</code> method example of rectangle is shown below
 
 ```js
 clone(){
