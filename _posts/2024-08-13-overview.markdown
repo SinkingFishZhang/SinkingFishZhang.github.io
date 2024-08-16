@@ -8,31 +8,134 @@ Before reading all the posts, I highly recommend that you read this post first, 
 
 Our drawing software is a pure front-end project with a common and old vue2/JavaScript ES6 framework created by Vue CLI with a common file structure. I guess that everyone here is already familiar with the front-end framework, and of course, the traditional front-end is not our theme. As a drawing software, I would like to mainly talk about some ideas and graphics architecture in graphic drawing below.
 
-The top-most object of the entire project, baseApp, is placed inside a &lt;canvas\> element. In the baseApp, sheet represents the top of the drawing system among with many other member variables, referred to as \_sheet. Inspired by PhotoShop, layers are children of sheet, referred to as \_layer. Each layer contains the shapes that we can see directly, for example textshape, lineshape, polygonshape, symbolshape, and some other custom-made shapes. These shapes are the children of the layer they are shown. Each shape is a separate class, and the methods in the class depict their respective characteristics. I think it'll be clearer with code blocks and results.
+The top-most object of the entire project, <code class="language-plaintext highlighter-rouge">baseApp</code>, is placed inside a <code class="language-plaintext highlighter-rouge">&lt;canvas></code> element. In the baseApp, sheet represents the top of the drawing system among with many other member variables, referred to as <code class="language-plaintext highlighter-rouge">sheet</code>. Inspired by PhotoShop, layers are children of sheet, referred to as <code class="language-plaintext highlighter-rouge">layer</code>. Each layer contains the shapes that we can see directly, for example <code class="language-plaintext highlighter-rouge">textShape</code>, <code class="language-plaintext highlighter-rouge">lineShape</code>, <code class="language-plaintext highlighter-rouge">polygonShape</code>, <code class="language-plaintext highlighter-rouge">symbolShape</code>, and some other custom-made shapes. These shapes are the children of the layer they are shown. Each shape is a separate class, and the methods in the class depict their respective characteristics. I think it'll be clearer with code blocks and results.
 
-TODO: code blocks and results
-TODO: explain
+```js
+// Overview of the graphics architecture with pseudo code
+let baseApp = new BaseApp(params of baseApp);
+let layer1 = new Layer(params of layer1);
+let layer2 = new Layer(params of layer2);
+let textShape = new Text(params of textShape);
+let lineShape = new Line(params of lineShape);
+let polygonShape = new Polygon(params of polygonShape);
+let symbolShape = new Symbol(params of symbolShape);
+layer1.addChild([textShape, lineShape]);
+layer2.addChild([polygonShape, symbolShape]);
+baseApp.sheet.addChild([layer1, layer2]);
 
-Next, I'd like to briefly describe the structure of an object class for shapes. Drawing a rectangle with lines is the example.
+console.log(baseApp.sheet.children);		//[layer1, layer2]	Object in Array
+console.log(baseApp.sheet.children[0].getClassName());		//layer1	String
+console.log(baseApp.sheet.children[1].getClassName());		//layer2	String
+console.log(baseApp.sheet.children[0].children);		//[textShape, lineShape]	Object in Array
+console.log(baseApp.sheet.children[1].children);		//[polygonShape, symbolShape]	Object in Array
+```
+In the code block above, <code class="language-plaintext highlighter-rouge">sheet</code> is a member variable of <code class="language-plaintext highlighter-rouge">baseApp</code>, <code class="language-plaintext highlighter-rouge">layer1</code> and <code class="language-plaintext highlighter-rouge">layer2</code> are the two children of <code class="language-plaintext highlighter-rouge">baseApp.sheet</code>, <code class="language-plaintext highlighter-rouge">textShape</code> and <code class="language-plaintext highlighter-rouge">lineShape</code> are children of layer 1, and <code class="language-plaintext highlighter-rouge">polygonShape</code> and <code class="language-plaintext highlighter-rouge">symbolShape</code> are children of layer 2. There will be two layers on the drawing software, the first layer shows text and line, and the second layer shows polygon and symbol.
 
-The first is the constructor, which defines some member variables and initialization methods. It's a common feature of object-oriented programming.
+Next, I'd like to briefly describe the structure of an object class for shapes. Drawing a rectangle with 4 lines is the example.
 
-TODO: constructor
+The first is the <code class="language-plaintext highlighter-rouge">constructor</code>, which defines some member variables and initialization methods. It's a common feature of object-oriented programming.
 
-You might say: isn't every shape a static image? That would be a big mistake. For a drawing software, each shape is dynamic, which means we can manipulate the shape at any time by changing some properties, such as changing the solid line to the dotted line, the pentagram to the triangle, and so on. This means that a looping method is executed infinite times in the shape class that respond to changed properties in real time, and this method is called render() and it's the core method. We do mathematical calculations on the position, angle, etc. of the shape in the render() method. The following code block shows how to use lineshapes to draw a rectangle with length l and width w in the render method
+```js
+constructor(x, y, width, height){
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height
+}
+```
 
-TODO: draw a rectangle with length l and width w in the render method
+You might say: isn't every shape a static image? That would be a big mistake. For a drawing software, each shape is dynamic, which means we can manipulate the shape at any time by changing some properties, such as changing the solid line to the dotted line, the pentagram to the triangle, and so on. This means that a looping method is executed infinite times in the shape class that respond to changed properties in real time, and this method is called <code class="language-plaintext highlighter-rouge">render()</code> and it's the core method. We do mathematical calculations on the position, angle, etc. of the shape in the <code class="language-plaintext highlighter-rouge">render()</code> method. The following code block shows how to use lines to draw a rectangle in the render method
 
-If you get tired of configuring each property when the graphical object is instantiated, we can clone it from the stylesheet (for more ideas about the stylesheet please read the post "stylesheet"). Therefore, clone() method should be included in each shape, but not necessary. clone() method is usually an instantiation of this class and will only be called outside of the class. A clone() method example of rectangle is shown below
+```js
+render(context){
+	this.setBound(x, y, x + this.width, y + this.height)
+	let leftLine = new Line().setCoordinates([x, x],[y, y + this.height])		//setCoordinate(xArr, yArr)
+	let rightLine = new Line().setCoordinates([x + this.width, x + this.width],[y, y + this.height])
+	let topLine = new Line().setCoordinates([x, x + this.width],[y + this.height, y + this.height])
+	let bottomLine = new Line().setCoordinates([x, x + this.width],[y, y])
+	leftLine.render(context)
+	leftLine.dispose()
+	rightLine.render(context)
+	rightLine.dispose()
+	topLine.render(context)
+	topLine.dispose()
+	bottomLine.render(context)
+	bottomLine.dispose()
+}
+```
 
-TODO: clone() method example of rectangle
+If you get tired of configuring each property when the graphical object is instantiated, we can clone it from the stylesheet (for more ideas about the stylesheet please read the post "stylesheet"). Therefore, <code class="language-plaintext highlighter-rouge">clone()</code> method should be included in each shape, but not necessary. <code class="language-plaintext highlighter-rouge">clone()</code> method is usually an instantiation of this class and will only be called outside of the class. A <code class="language-plaintext highlighter-rouge">clone()</code> method example of rectangle is shown below
 
-The getProperties and setProperties methods are a must in a shape class. This method allows us to save the sheet locally and read the local file, which is the process of serialization and deserialization. In both of these methods, you need to add all the properties contained in the constructor to ensure that the properties of the shape are saved and read correctly.
+```js
+clone(){
+	let r = new Rectangle(
+		this.x,
+		this.y,
+		this.width,
+		this.height
+		);
+	return r
+}
+```
 
-Bound is an important property of a shape. Normally, the bound of a shape is the extreme value of the horizontal and vertical directions of the shape's rendering range. It 's a rectangle. Bounding box is also the range of dotted boxes that appear when users select a shape with the mouse. Although the wrong bounding box does not affect the display of the shape itself, it will make it difficult for the user to select the shape, and bizzare position shifts and deformations may occur in subsequent matrix calculations. Defined by setBound() method, it is necessary. It needs to be called in the render method to ensure that the bound is changed in real time when the property changes. The example shows as follows
+The <code class="language-plaintext highlighter-rouge">getProperties()</code> and <code class="language-plaintext highlighter-rouge">setProperties()</code> methods are a must in a shape class. This method allows us to save the sheet locally and read the local file, which is the process of serialization and deserialization. In both of these methods, you need to add all the properties contained in the <code class="language-plaintext highlighter-rouge">constructor</code> to ensure that the properties of the shape are saved and read correctly.
 
-TODO: setBound()
+Bound is an important property of a shape. Normally, the bound of a shape is the extreme value of the horizontal and vertical directions of the shape's rendering range. It 's a rectangle. Bounding box is also the range of dotted boxes that appear when users select a shape with the mouse. Although the wrong bounding box does not affect the display of the shape itself, it will make it difficult for the user to select the shape, and bizzare position shifts and deformations may occur in subsequent matrix calculations. Defined by <code class="language-plaintext highlighter-rouge">setBound()</code> method, it is necessary. It needs to be called in the render method to ensure that the bound is changed in real time when the property changes. For this example, <code class="language-plaintext highlighter-rouge">setBound()</code> has been called in <code class="language-plaintext highlighter-rouge">render()</code>.
 
 To sum up, the code for this example is:
 
-Todo: all code
+```js
+// pseudo code
+import {packages} from sources
+export class Rectangle extends shape{
+	constructor(x, y, width, height){
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height
+	}
+	render(context){
+		//shape.setBound(leftbottom_x,leftbottom_y, righttop_x, righttop_y)
+		this.setBound(x, y, x + this.width, y + this.height)
+		let leftLine = new Line().setCoordinates([x, x],[y, y + this.height])		//setCoordinate(xArr, yArr)
+		let rightLine = new Line().setCoordinates([x + this.width, x + this.width],[y, y + this.height])
+		let topLine = new Line().setCoordinates([x, x + this.width],[y + this.height, y + this.height])
+		let bottomLine = new Line().setCoordinates([x, x + this.width],[y, y])
+		leftLine.render(context)
+		leftLine.dispose()
+		rightLine.render(context)
+		rightLine.dispose()
+		topLine.render(context)
+		topLine.dispose()
+		bottomLine.render(context)
+		bottomLine.dispose()
+	}
+	clone(){
+		let r = new Rectangle(
+			this.x,
+			this.y,
+			this.width,
+			this.height
+			);
+		return r
+	}
+	setProperties(properties){		//Deserialization
+		if(!properties) return;
+		super.setProperties(properties);
+		(Object.prototype.hasOwnProperty.call(properties, x))&&(this.x = properties.x)
+		(Object.prototype.hasOwnProperty.call(properties, y))&&(this.x = properties.x)
+		(Object.prototype.hasOwnProperty.call(properties, width))&&(this.x = properties.width)
+		(Object.prototype.hasOwnProperty.call(properties, height))&&(this.x = properties.height)
+		return this
+	}
+	getProperties(){	//Serialization
+		let a = super.getProperties()
+		a.x = this.x
+		a.y = this.y
+		a.width = this.width
+		a.height = this.height
+		return a
+	}
+}
+package.setClassName("Rectangle")
+```
