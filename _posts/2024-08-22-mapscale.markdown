@@ -1,0 +1,19 @@
+---
+layout: post
+title:  "Map Scale"
+permalink: /mapscale
+---
+
+<h2>Dots per Inch(DPI)</h2>
+
+Dots per inch (DPI) is a measure of dot density, in paticular the number of individual dots that can be placed in a line within the span of 1 inch (2.54 cm). DPI of screen is determined by the size of the screen and its resolution. The higher the DPI the less the individual pixels can be discerned on the display. Through the DPI of the screen, we can get the relationship between pixels and length. This relationship is:
+
+<div align='center'>DPI = Number of pixel / 0.0254</div>
+<br>
+<div align='center'>Length per pixel(m) = DPI * 0.0254 m / Number of pixel</div>
+
+From this, we can set a ruler with a fixed pixel length on the screen and calculate its actual length
+
+<h2>Map Scale</h2>
+
+The map scale refers to the ratio of the distance on the map to the actual distance when measuring the same object.
