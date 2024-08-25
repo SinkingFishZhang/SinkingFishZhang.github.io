@@ -9,11 +9,76 @@ permalink: /mapscale
 Dots per inch (DPI) is a measure of dot density, in paticular the number of individual dots that can be placed in a line within the span of 1 inch (2.54 cm). DPI of screen is determined by the size of the screen and its resolution. The higher the DPI the less the individual pixels can be discerned on the display. Through the DPI of the screen, we can get the relationship between pixels and length. This relationship is:
 
 <div align='center'>DPI = Number of pixel / 0.0254</div>
-<br>
 <div align='center'>Length per pixel(m) = DPI * 0.0254 m / Number of pixel</div>
 
-From this, we can set a ruler with a fixed pixel length on the screen and calculate its actual length
+The function of getting DPI of the screen is:
+
+```js
+static getDPI(){
+	let dpr = windows.devicePixelRatio || 1;
+	return [96*dpr, 96*dpr]
+}
+```
+
+From this, we can set a ruler with a fixed pixel length on the screen and calculate its actual length on the screen.
 
 <h2>Map Scale</h2>
 
-The map scale refers to the ratio of the distance on the map to the actual distance when measuring the same object.
+The map scale refers to the ratio of the distance on the map to the actual distance when measuring the same object. It consists of three parts, which are a fixed-pixel-length ruler, the actual length of the ruler in the world, and the ratio of the length of the ruler on the screen to the length of it in the world. 
+
+First, we should calculate the actual distance on the screen of the ruler. According to the formula in the previous chapter, the function is:
+
+```js
+pixel2device(dpi, pixelNum){
+	return dpi * 0.0254 / pixelNum
+}
+```
+
+Given the pixel length, we have known the actual distance on the screen. However, the map scale is the length corresponding to the real world. The relationship between length on the screen and length in the real world is as follows:
+
+```js
+world2device(distance, dpi){
+	let dim = new Dimension(a, a)
+	this.sheet.getSceneTransform().transfromDimension(dim, dim)
+	return dim.getWidth() / dpi * 0.0254
+}
+
+```
+
+```js
+//pseudo code
+import packages from source
+export class MapScale extends Shape{
+	constructor(sheetScale){
+		this.sheetScale = sheetScale
+		this.visible = false
+		this.rulerPixelLength = 75
+		this.dpi = getDPI()[0]
+	}
+
+	render(context){
+		//draw the ruler withthe length of 75 pixel
+		//lineShape.setCoordicates(xArr, yArr)
+		let ruler = new lineShape().setCoordinates([0,0,this.rulerPixelLength,this.rulerPixelLength],[5,0,0,5])	
+		ruler.render(context)
+		ruler.dispose()
+
+		//
+		let deviceLength = this.pixel2device(this.dpi, this.rulerPixelLength)	//unit: (m)
+		let worldLength = deviceLength / world2device(1, dpi)	//unit: (m)
+		let ratio = worldLength / deviceLength
+
+		let textShape1 = new Text()
+		textShape1.setBound(0, -20, 75, -10)
+		textShape1.setText('1:' + ratio.toFixed(0))
+		textShape1.render(context)
+		textShape1.dispose()
+
+		let textShape2 = new Text()
+		textShape2.setBound(0, 20, 75, 10)
+		textShape2.setText(worldLength.toFixed(2)+' m')
+		textShape2.render(context)
+		textShape2.dispose()
+	}
+}
+```
