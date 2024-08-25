@@ -46,9 +46,11 @@ The paste method needs to be executed after copying or cutting, so the paste met
 //baseApp.js
 paste(){
 	let clones = this._copied.map((node)=>{
-
+		node.clone();
+		node.translate(20, 20);
+		return node;
 	})
-	let _trash = this.getHistory.push({cmd:"paste",shapes:clones})
+	let _trash = this.getHistory.push({cmd:"paste",shapes:clones,layer:this._layer})
 	this._paint.editNode(clones)	//set new shape as selected mode
 
 	//strat dealing with the local transform of pasted shape
